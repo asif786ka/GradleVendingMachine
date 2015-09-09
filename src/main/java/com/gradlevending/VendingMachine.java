@@ -1,4 +1,4 @@
-package com.example;
+package com.gradlevending;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -18,15 +18,15 @@ public class VendingMachine {
     }
 
     static enum Money {
-        FIVE_HUNDRED_EURO(50000),
-        TWO_HUNDRED_EURO(20000),
-        ONE_HUNDRED_EURO(10000),
-        FIFTY_EURO(5000),
-        TWENTY_EURO(2000),
-        TEN_EURO(1000),
-        FIVE_EURO(500),
-        TWO_EURO(200),
-        ONE_EURO(100),
+        FIVE_HUNDRED_DOLLAR(50000),
+        TWO_HUNDRED_DOLLAR(20000),
+        ONE_HUNDRED_DOLLAR(10000),
+        FIFTY_DOLLAR(5000),
+        TWENTY_DOLLAR(2000),
+        TEN_DOLLAR(1000),
+        FIVE_DOLLAR(500),
+        TWO_DOLLAR(200),
+        ONE_DOLLAR(100),
         FIFTY_CENT(50),
         TWENTY_CENT(20),
         TEN_CENT(10),

@@ -1,17 +1,18 @@
-package com.example;
+package com.gradlevending;
 
 import java.util.EnumMap;
 import java.util.Map;
 
 import org.junit.*;
 
-import com.example.VendingMachine.InsufficentPaymentException;
-import com.example.VendingMachine.Money;
-import com.example.VendingMachine.NotEnoughChangeException;
-import com.example.VendingMachine.NotPaidException;
+import com.gradlevending.VendingMachine;
+import com.gradlevending.VendingMachine.InsufficentPaymentException;
+import com.gradlevending.VendingMachine.Money;
+import com.gradlevending.VendingMachine.NotEnoughChangeException;
+import com.gradlevending.VendingMachine.NotPaidException;
 
 import static org.junit.Assert.*;
-import static com.example.VendingMachine.*;
+import static com.gradlevending.VendingMachine.*;
 
 public class VendingMachineTest {
 
@@ -26,25 +27,25 @@ public class VendingMachineTest {
 	@Test
 	public void init() {
 		VendingMachine machine = new VendingMachine();
-		assertEquals(0, machine.getAvailableAmount(Money.FIFTY_EURO));
+		assertEquals(0, machine.getAvailableAmount(Money.FIFTY_DOLLAR));
 	}
 
 	@Test
 	public void recharge() {
 		VendingMachine machine = new VendingMachine();
-		machine.recharge(Money.FIVE_HUNDRED_EURO, 5);
-		machine.recharge(Money.FIVE_HUNDRED_EURO, 2);
-		assertEquals(7, machine.getAvailableAmount(Money.FIVE_HUNDRED_EURO));
+		machine.recharge(Money.FIVE_HUNDRED_DOLLAR, 5);
+		machine.recharge(Money.FIVE_HUNDRED_DOLLAR, 2);
+		assertEquals(7, machine.getAvailableAmount(Money.FIVE_HUNDRED_DOLLAR));
 	}
 
 	@Test
 	public void buyATicket() throws NotEnoughChangeException, InsufficentPaymentException {
 		VendingMachine machine = createWellFilledMachine();
 		machine.selectTicket(Ticket.INNER_ZONES);
-		machine.insertMoney(Money.TEN_EURO);
+		machine.insertMoney(Money.TEN_DOLLAR);
 		Map<Money, Integer> change = machine.buy();
 		EnumMap<Money, Integer> expMoney = new EnumMap<Money, Integer>(Money.class);
-		expMoney.put(Money.TWO_EURO, 2);
+		expMoney.put(Money.TWO_DOLLAR, 2);
 		expMoney.put(Money.FIFTY_CENT, 1);
 		expMoney.put(Money.TEN_CENT, 1);
 		assertEquals(expMoney, change);
@@ -52,8 +53,8 @@ public class VendingMachineTest {
 		expTickets.put(Ticket.INNER_ZONES, 1);
 		assertEquals(expTickets, machine.takeTickets());
 		
-		assertEquals(11, machine.getAvailableAmount(Money.TEN_EURO));
-		assertEquals(8, machine.getAvailableAmount(Money.TWO_EURO));
+		assertEquals(11, machine.getAvailableAmount(Money.TEN_DOLLAR));
+		assertEquals(8, machine.getAvailableAmount(Money.TWO_DOLLAR));
 		assertEquals(9, machine.getAvailableAmount(Money.FIFTY_CENT));
 		assertEquals(9, machine.getAvailableAmount(Money.TEN_CENT));
 	}
@@ -62,11 +63,11 @@ public class VendingMachineTest {
 	public void twoTransactions() throws NotEnoughChangeException, InsufficentPaymentException {
 		VendingMachine machine = createWellFilledMachine();
 		machine.selectTicket(Ticket.INNER_ZONES);
-		machine.insertMoney(Money.TEN_EURO);
+		machine.insertMoney(Money.TEN_DOLLAR);
 		machine.buy();
 		machine.takeTickets();
 		machine.selectTicket(Ticket.ALL_ZONES);
-		machine.insertMoney(Money.TEN_EURO);
+		machine.insertMoney(Money.TEN_DOLLAR);
 		machine.insertMoney(Money.TEN_CENT);
 		machine.insertMoney(Money.TEN_CENT);
 		machine.insertMoney(Money.TEN_CENT);
@@ -82,7 +83,7 @@ public class VendingMachineTest {
 	public void notPaid() throws NotEnoughChangeException, InsufficentPaymentException {
 		VendingMachine machine = createWellFilledMachine();
 		machine.selectTicket(Ticket.INNER_ZONES);
-		machine.insertMoney(Money.TEN_EURO);
+		machine.insertMoney(Money.TEN_DOLLAR);
 		machine.takeTickets();
 	}
 	
@@ -90,10 +91,10 @@ public class VendingMachineTest {
 	public void transactionCanceled() throws NotEnoughChangeException, InsufficentPaymentException {
 		VendingMachine machine = createWellFilledMachine();
 		machine.selectTicket(Ticket.INNER_ZONES);
-		machine.insertMoney(Money.TEN_EURO);
+		machine.insertMoney(Money.TEN_DOLLAR);
 		Map<Money, Integer> refund = machine.cancel();
 		EnumMap<Money, Integer> expMoney = new EnumMap<Money, Integer>(Money.class);
-		expMoney.put(Money.TEN_EURO, 1);
+		expMoney.put(Money.TEN_DOLLAR, 1);
 		assertEquals(expMoney, refund);
 		assertEquals(0, machine.getCurrentPrice());
 		assertEquals(0, machine.getPaidSum());
@@ -103,7 +104,7 @@ public class VendingMachineTest {
 	public void notEnoughChange() throws NotEnoughChangeException, InsufficentPaymentException {
 		VendingMachine machine = new VendingMachine();
 		machine.selectTicket(Ticket.INNER_ZONES);
-		machine.insertMoney(Money.TEN_EURO);
+		machine.insertMoney(Money.TEN_DOLLAR);
 		machine.buy();
 	}
 	
@@ -114,14 +115,14 @@ public class VendingMachineTest {
 		machine.recharge(Money.TWENTY_CENT, 1);
 		machine.recharge(Money.TEN_CENT, 2);
 		machine.selectTicket(Ticket.MINI_TICKET);
-		machine.insertMoney(Money.TWO_EURO);
+		machine.insertMoney(Money.TWO_DOLLAR);
 		try {
 			machine.buy();
 			fail("Exception expected");
 		} catch (NotEnoughChangeException ignored) {
 			// The purpose of this test it to check the post exception state
 		}
-		assertEquals(1, machine.getAvailableAmount(Money.TWO_EURO));
+		assertEquals(1, machine.getAvailableAmount(Money.TWO_DOLLAR));
 		assertEquals(1, machine.getAvailableAmount(Money.TWENTY_CENT));
 		assertEquals(2, machine.getAvailableAmount(Money.TEN_CENT));
 	}	
@@ -130,7 +131,7 @@ public class VendingMachineTest {
 	public void finishedTransactionCanceled() throws NotEnoughChangeException, InsufficentPaymentException {
 		VendingMachine machine = createWellFilledMachine();
 		machine.selectTicket(Ticket.INNER_ZONES);
-		machine.insertMoney(Money.TEN_EURO);
+		machine.insertMoney(Money.TEN_DOLLAR);
 		machine.buy();
 		machine.cancel();
 	}
@@ -139,7 +140,7 @@ public class VendingMachineTest {
 	public void addedTicketAfterTransactionFinished() throws NotEnoughChangeException, InsufficentPaymentException {
 		VendingMachine machine = createWellFilledMachine();
 		machine.selectTicket(Ticket.INNER_ZONES);
-		machine.insertMoney(Money.TEN_EURO);
+		machine.insertMoney(Money.TEN_DOLLAR);
 		machine.buy();
 		machine.selectTicket(Ticket.ALL_ZONES);
 		machine.takeTickets();
@@ -149,9 +150,9 @@ public class VendingMachineTest {
 	public void insertedMoneyAfterTransactionFinished() throws NotEnoughChangeException, InsufficentPaymentException {
 		VendingMachine machine = createWellFilledMachine();
 		machine.selectTicket(Ticket.INNER_ZONES);
-		machine.insertMoney(Money.TEN_EURO);
+		machine.insertMoney(Money.TEN_DOLLAR);
 		machine.buy();
-		machine.insertMoney(Money.TEN_EURO);
+		machine.insertMoney(Money.TEN_DOLLAR);
 		machine.takeTickets();
 	}
 	
@@ -160,7 +161,7 @@ public class VendingMachineTest {
 					throws NotEnoughChangeException, InsufficentPaymentException {
 		VendingMachine machine = createWellFilledMachine();
 		machine.selectTicket(Ticket.INNER_ZONES);
-		machine.insertMoney(Money.TEN_EURO);
+		machine.insertMoney(Money.TEN_DOLLAR);
 		machine.buy();
 		machine.takeTickets();
 		machine.selectTicket(Ticket.INNER_ZONES);
@@ -171,7 +172,7 @@ public class VendingMachineTest {
 	public void notEnoughMoneyForTicket() throws NotEnoughChangeException, InsufficentPaymentException {
 		VendingMachine machine = createWellFilledMachine();
 		machine.selectTicket(Ticket.INNER_ZONES);
-		machine.insertMoney(Money.ONE_EURO);
+		machine.insertMoney(Money.ONE_DOLLAR);
 		machine.buy();
 	}	
 }
